@@ -167,9 +167,9 @@ Namespace Controls
             End If
 
             If Not _game.AreAnyStreamsAvailable Then
-                If NHLGamesMetro.IsServerUp.Result = False Then
+                If NHLGamesMetro.IsServerUp = False Then
                     lblStreamStatus.Text = NHLGamesMetro.RmText.GetString("lblServerDown")
-                Else If _game.GameDate.ToLocalTime() > Date.UtcNow.ToLocalTime() And _game.GameState < GameStateEnum.InProgress Then
+                ElseIf _game.GameDate.ToLocalTime() > Date.UtcNow.ToLocalTime() And _game.GameState < GameStateEnum.InProgress Then
                     lblStreamStatus.Text = NHLGamesMetro.RmText.GetString("lblStreamAvailableAtGameTime")
                 Else
                     lblStreamStatus.Text = NHLGamesMetro.RmText.GetString("lblNoStreamAvailable")

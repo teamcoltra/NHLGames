@@ -38,7 +38,7 @@ Public Class NHLGamesMetro
     Public Const AnimateTipsEveryTick As Integer = 10000
     Public Shared Tips As New Dictionary(Of Integer, String)
     Public Shared MLBAMProxy As Proxy
-    Public Shared IsServerUp As Task(Of Boolean) = Nothing
+    Public Shared IsServerUp As Boolean = Nothing
     Public ProxyListening As Task(Of Boolean) = Nothing
 
     <SecurityPermission(SecurityAction.Demand, Flags:=SecurityPermissionFlag.ControlAppDomain)>

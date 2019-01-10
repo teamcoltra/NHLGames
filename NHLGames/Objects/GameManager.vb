@@ -18,7 +18,6 @@ Namespace Objects
         Private Const MediaOff = "MEDIA_OFF"
 
         Public Async Function GetGamesAsync() As Task(Of Game())
-            Dim isServerUp As Boolean = Await NHLGamesMetro.IsServerUp
             Dim schedule As Schedule = Await Common.GetScheduleAsync(NHLGamesMetro.GameDate)
 
             If schedule Is Nothing Then
@@ -26,7 +25,7 @@ Namespace Objects
                 Return Nothing
             End If
 
-            If Not isServerUp Then
+            If Not NHLGamesMetro.IsServerUp Then
                 Console.WriteLine(String.Format(NHLGamesMetro.RmText.GetString($"msgServerSeemsDown"), NHLGamesMetro.HostName))
             End If
 
@@ -40,7 +39,7 @@ Namespace Objects
             If numberOfGames = 0 Then Return Nothing
 
             gamesArray = New Game(numberOfGames - 1) {}
-            lstStreamsTask = If(isServerUp, New Task(numberOfStreams - 1) {}, New Task() {})
+            lstStreamsTask = If(NHLGamesMetro.IsServerUp, New Task(numberOfStreams - 1) {}, New Task() {})
 
             Dim progressPerGame = Convert.ToInt32(((NHLGamesMetro.SpnLoadingMaxValue - 1) - NHLGamesMetro.SpnLoadingValue) / numberOfGames)
             Dim currentGame As Game
@@ -74,8 +73,8 @@ Namespace Objects
                     currentGame.SetStatsInfo(game)
                 End If
 
-                If isServerUp Then
-                    Dim progressPerStream = If (game.NHLTVFeeds.Count() > 0, Convert.ToInt32(progressPerGame / game.NHLTVFeeds.Count()), progressPerGame)
+                If NHLGamesMetro.IsServerUp Then
+                    Dim progressPerStream = If(game.NHLTVFeeds.Count() > 0, Convert.ToInt32(progressPerGame / game.NHLTVFeeds.Count()), progressPerGame)
                     For Each feed In game.NHLTVFeeds
                         NHLGamesMetro.SpnLoadingValue += progressPerStream
                         Dim streamType As StreamTypeEnum = GetStreamType(feed.streamTypeSelected)
@@ -85,15 +84,15 @@ Namespace Objects
                             Dim tStreamType = streamType
                             Dim tCurrentGameIndex = currentGameIndex
                             Dim tStreamTypeSelected = feed.streamTypeSelected
-                            lstStreamsTask(currentStreamIndex) = _
+                            lstStreamsTask(currentStreamIndex) =
                                 Task.Run(Async Function()
-                                    Dim newStream = Await SetNewGameStream(tCurrentGame, tInnerStream, tStreamType, tStreamTypeSelected)
-                                    If streamType <> StreamTypeEnum.Unknown Then
-                                        gamesArray(tCurrentGameIndex).StreamsDict.Add(streamType, newStream)
-                                    Else
-                                        gamesArray(tCurrentGameIndex).StreamsUnknown.Add(newStream)
-                                    End If
-                                End Function)
+                                             Dim newStream = Await SetNewGameStream(tCurrentGame, tInnerStream, tStreamType, tStreamTypeSelected)
+                                             If streamType <> StreamTypeEnum.Unknown Then
+                                                 gamesArray(tCurrentGameIndex).StreamsDict.Add(streamType, newStream)
+                                             Else
+                                                 gamesArray(tCurrentGameIndex).StreamsUnknown.Add(newStream)
+                                             End If
+                                         End Function)
 
                             If streamType = StreamTypeEnum.Unknown Then
                                 Console.WriteLine(English.errorStreamTypeUnknown, currentGame.AwayAbbrev,
