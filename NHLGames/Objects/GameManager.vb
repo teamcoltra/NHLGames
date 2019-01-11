@@ -8,7 +8,7 @@ Namespace Objects
         Implements IDisposable
         Private _disposedValue As Boolean
 
-        Private Shared ReadOnly DictStreamType = New Dictionary(Of String, StreamTypeEnum)() From {
+        Private Shared ReadOnly DictStreamType As Dictionary(Of String, StreamTypeEnum) = New Dictionary(Of String, StreamTypeEnum)() From {
             {"HOME", StreamTypeEnum.Home}, {"AWAY", StreamTypeEnum.Away}, {"NATIONAL", StreamTypeEnum.National},
             {"FRENCH", StreamTypeEnum.French},
             {"MULTICAM1", StreamTypeEnum.MultiCam1}, {"MULTICAM2", StreamTypeEnum.MultiCam2},

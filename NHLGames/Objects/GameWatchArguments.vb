@@ -26,6 +26,15 @@ Namespace Objects
         Public Property StreamerType As StreamerTypeEnum = StreamerTypeEnum.None
         Public Property StreamLiveReplay As LiveReplayEnum = LiveReplayEnum.StreamStarts
 
+        Public Shared ReadOnly StreamerDefaultArgs As Dictionary(Of String, String) = New Dictionary(Of String, String)() From {
+            {"--hls-segment-threads", "4"}, {"--hls-segment-attempts", "10"}, {"--hls-segment-timeout", "60"}}
+
+        Public Shared ReadOnly MpvDefaultArgs As Dictionary(Of String, String) = New Dictionary(Of String, String)() From {
+            {"--cache", "50000"}}
+
+        Public Shared ReadOnly VlcDefaultArgs As Dictionary(Of String, String) = New Dictionary(Of String, String)() From {
+            {"--file-caching", "10000"}, {"--network-caching", "10000"}}
+
         Public Overrides Function ToString() As String
             Return OutputArgs(False)
         End Function
@@ -59,7 +68,7 @@ Namespace Objects
                 result = PlayerArgs() & ReplayArgs()
             End If
 
-            result &= ThreadArgs() & ProxyArgs()
+            result &= ProxyArgs()
             If UseCustomStreamerArgs Then result &= CustomStreamerArgs
             If Not safeOutput Then result &= NhlCookieArgs()
             If Not safeOutput Then result &= UserAgentArgs()

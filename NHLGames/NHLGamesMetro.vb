@@ -231,6 +231,15 @@ Public Class NHLGamesMetro
         Dim rb As RadioButton = sender
         If rb.Checked Then
             Player.RenewArgs()
+            Dim gameArgs = ApplicationSettings.Read(Of GameWatchArguments)(SettingsEnum.DefaultWatchArgs, New GameWatchArguments)
+            Dim defaultPlayerArgs = New Dictionary(Of String, String)()
+            Select Case gameArgs.PlayerType
+                Case PlayerTypeEnum.Vlc
+                    defaultPlayerArgs = GameWatchArguments.VlcDefaultArgs
+                Case PlayerTypeEnum.Mpv
+                    defaultPlayerArgs = GameWatchArguments.MpvDefaultArgs
+            End Select
+            SetDefaultArgs(defaultPlayerArgs, txtPlayerArgs, True)
             _writeToConsoleSettingsChanged(lblPlayer.Text, rb.Text)
         End If
     End Sub
@@ -324,6 +333,7 @@ Public Class NHLGamesMetro
     End Sub
 
     Private Sub tgStreamer_CheckedChanged(sender As Object, e As EventArgs) Handles tgStreamer.CheckedChanged
+        SetStreamerDefaultArgs(FormInstance)
         txtStreamerArgs.Enabled = tgStreamer.Checked
         Player.RenewArgs()
         _writeToConsoleSettingsChanged(String.Format(English.msgThisEnable, lblStreamerArgs.Text),
@@ -331,6 +341,7 @@ Public Class NHLGamesMetro
     End Sub
 
     Private Sub tgPlayer_CheckedChanged(sender As Object, e As EventArgs) Handles tgPlayer.CheckedChanged
+        SetPlayerDefaultArgs(FormInstance)
         txtPlayerArgs.Enabled = tgPlayer.Checked
         Player.RenewArgs()
         _writeToConsoleSettingsChanged(String.Format(English.msgThisEnable, lblPlayerArgs.Text),
@@ -388,6 +399,34 @@ Public Class NHLGamesMetro
 
     Private Sub TabControl_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabMenu.SelectedIndexChanged
         RefreshFocus()
+    End Sub
+
+    Public Sub SetStreamerDefaultArgs(form As NHLGamesMetro)
+        If form Is Nothing Then Return
+        If Not form.tgStreamer.Checked Then
+            SetDefaultArgs(GameWatchArguments.StreamerDefaultArgs, form.txtStreamerArgs)
+        End If
+    End Sub
+
+    Public Sub SetPlayerDefaultArgs(form As NHLGamesMetro, Optional overwrite As Boolean = False)
+        If form Is Nothing Then Return
+        If Not form.tgPlayer.Checked Then
+            Dim defaultArgs = New Dictionary(Of String, String)()
+            If form.rbMPV.Checked Then
+                defaultArgs = GameWatchArguments.MpvDefaultArgs
+            ElseIf form.rbVLC.Checked Then
+                defaultArgs = GameWatchArguments.VlcDefaultArgs
+            End If
+
+            SetDefaultArgs(defaultArgs, form.txtPlayerArgs, overwrite)
+        End If
+    End Sub
+
+    Private Sub SetDefaultArgs(args As Dictionary(Of String, String), txt As TextBox, Optional overwrite As Boolean = False)
+        If overwrite Then txt.Text = ""
+        For Each arg In args
+            If Not txt.Text.Contains(arg.Key) Then txt.Text &= $" {arg.Key}={arg.Value}"
+        Next
     End Sub
 
     Private Sub NHLGamesMetro_MouseMove(sender As Object, e As MouseEventArgs) Handles MyBase.MouseMove

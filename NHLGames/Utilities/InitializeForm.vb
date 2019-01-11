@@ -193,6 +193,9 @@ Namespace Utilities
                                                                                       New AdDetectionConfigs)
             End If
 
+            Form.SetStreamerDefaultArgs(Form)
+            Form.SetPlayerDefaultArgs(Form)
+
             BindAdDetectionConfigsToForm(adDetectionConfigs)
 
             Form.lblNoGames.Location = New Point(((Form.tabGames.Width - Form.lblNoGames.Width) / 2),
