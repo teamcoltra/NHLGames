@@ -661,9 +661,9 @@ Public Class NHLGamesMetro
         Dim report = $"NHLGames Bug Report {version}{vbCrLf}{vbCrLf}" &
                      $"Operating system: {My.Computer.Info.OSFullName.ToString()} {x64} - .Net build {framework}{vbTab}{vbCrLf}" &
                      $"Internet: Connection test {If(My.Computer.Network.IsAvailable, "succeeded", "failed") _
-                         }, ping google.com {If(pingGoogle, "succeeded", "failed")}{ vbTab}{vbCrLf}" &
-                     $"Form: {If(Not String.IsNullOrEmpty(lblDate.Text), "loaded", "not loaded")}, " &
-                     $"{flpGames.Controls.Count} games currently on form, " &
+                         }, ping google.com {If(pingGoogle, "succeeded", "failed")}{vbTab}{vbCrLf}" &
+                     $"Streamer args {If(tgStreamer.Checked, "enabled", "disabled")}:{txtStreamerArgs.Text}{vbTab}{vbCrLf}" &
+                     $"Player args {If(tgPlayer.Checked, "enabled", "disabled")}:{txtPlayerArgs.Text}{vbTab}{vbCrLf}" &
                      $"Selected player: {player.ToString()}{vbTab}{vbCrLf}" &
                      $"Streamer path: {streamerPath.ToString()} [{ _
                          If(streamerPath.Equals(txtStreamerPath.Text), "on form", "not on form")}] [{ _

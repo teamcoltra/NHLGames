@@ -243,6 +243,16 @@ Namespace Utilities
                                                streamerPath As String) As Boolean
             If watchArgs Is Nothing Then Return True
 
+            If Not String.IsNullOrEmpty(Form.txtMpvPath.Text) Then
+                watchArgs.PlayerType = PlayerTypeEnum.Mpv
+            ElseIf Not String.IsNullOrEmpty(Form.txtVLCPath.Text) Then
+                watchArgs.PlayerType = PlayerTypeEnum.Vlc
+            ElseIf Not String.IsNullOrEmpty(Form.txtMpcPath.Text) Then
+                watchArgs.PlayerType = PlayerTypeEnum.Mpc
+            Else
+                watchArgs.PlayerType = PlayerTypeEnum.None
+            End If
+
             Dim hasPlayerSet As Boolean = playersPath.Any(Function(x) x = watchArgs.PlayerPath)
             If Not watchArgs.StreamerPath.Equals(streamerPath) Then Return True
             If Not hasPlayerSet Then

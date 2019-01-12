@@ -15,10 +15,10 @@ Namespace Objects
         Public Property PlayerType As PlayerTypeEnum = PlayerTypeEnum.None
         Public Property StreamerPath As String = String.Empty
         Public Property UseCustomStreamerArgs As Boolean = False
-        Public Property CustomStreamerArgs As String = String.Empty
-        Public Property UseCustomPlayerArgs As Boolean = False
-        Public Property CustomPlayerArgs As String = String.Empty
-        Public Property UseOutputArgs As Boolean = False
+        Public Property CustomStreamerArgs As String = " --hls-segment-threads=2 --hls-segment-attempts=10 --hls-segment-timeout=60"
+        Public Property UseCustomPlayerArgs As Boolean = True
+        Public Property CustomPlayerArgs As String = " --file-caching=10000 --network-caching=10000 --cache=50000"
+        Public Property UseOutputArgs As Boolean = True
         Public Property PlayerOutputPath As String = String.Empty
         Public Property StreamLiveRewind As Integer = 5
         Public Property GameIsOnAir As Boolean = False
